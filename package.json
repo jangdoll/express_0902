@@ -1,0 +1,18 @@
+{
+  "name": "express_0902",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js",
+    "debug": "nodemon --watch ./src --inspect=0.0.0.0:9229 --nolazy ./src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^1.19.1"
+  }
+}
