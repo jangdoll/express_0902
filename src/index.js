@@ -10,14 +10,20 @@ app.use(express.urlencoded({ extended: true }));
 app.listen(3000);
 
 app.get("/users", (req, res) => {
-    res.send("user " + user.name + " get"); 
+    if(user) {
+        res.send("user " + user.name +" get");
+    } else{
+        res.send("user id " + req.params.id+" 가 존재하지 않습니다.");    
+    }
 });
 
 app.get("/users/:id", (req, res) => {
-    if(user.id == req.params.id) {
+    if(user && user.id == req.params.id) {
         res.send("user " + user.name +" get");
+    } else {
+        res.send("user id " + req.params.id+" 가 존재하지 않습니다.");
     }
-    res.send("user id " + req.params.id+" 가 존재하지 않습니다.");
+
 });
 
 app.post("/users", (req, res) => {
@@ -27,10 +33,19 @@ app.post("/users", (req, res) => {
 });
 
 app.put("/users/:id", (req, res) => {
-    user = req.body; 
-    res.send("user " + user.name);
+    if(user && user.id == req.params.id) {
+        user.name = req.body.name; 
+        res.send("user name" + user.name + "으로 변경");
+    } else {
+        res.send("user id " + req.params.id + "가 존재하지 않습니다.")
+    }
 });
 
 app.delete("/users/:id", (req, res) => {
-    res.send("user " + req.params.id + " delete");
+    if(user && user.id == req.params.id) {
+        user = null;
+        res.send("user id " + req.params.id + " 삭제");
+    } else {
+        res.send("user id " + req.params.id + " 가 존재하지 않습니다.");
+    }
 });
