@@ -2,68 +2,111 @@ const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
 
-let users = [{
-    id: 1,
-    name: "윤장원"
-},{
-    id: 2,
-    name: "나광진"
-    }];
+const Sequelize = require("sequelize");
+const sequelize = new Sequelize("node_example", "root", "1234", {host:"localhost", dialect: "mysql"});
 
-
-router.get("/", (req, res) => {
-    let msg = "유저가 존재하지 않습니다.";
-    if(users.length > 0) {
-        msg = users.length + "명의 유저가 존재합니다.";
+const check_sequelize_auth = async () => {
+    try{
+        await sequelize.authenticate();
+        console.log("연결 성공");
+    }catch(err){
+        console.log("연결 실패: ", err);
     }
-    res.send({msg, result:users});    
+};
+
+check_sequelize_auth();
+
+const User = sequelize.define("user", {
+    name : {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    address : {
+        type: Sequelize.STRING,
+        allowNullG: false
+    },
+    password : {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    }
 });
 
-router.get("/:id", (req, res) => {
-    let msg = "id가 " + req.params.id + "인 유저가 존재하지 않습니다.";
-    let user = _.find(users, ["id", parseInt(req.params.id)]);
+User.sync({ force: true }).then(() => {
+    return User.create({
+        name: "홍길동",
+        address: "seoul",
+        password: "112"
+    });
+}).then(()=> {
+    return User.create({
+        name: "김철수",
+        address: "anyang",
+        password: "124"
+    });
+});
 
-    if(user) {
-        msg = "성공적으로 조회하였습니다.";
+// let users = [];
+
+
+router.get("/address/:address", async(req, res) => {
+    let result = await User.findAll({
+        where:{
+            address: req.params.address
+        }
+    });
+    res.send(result);
+});
+
+router.get("/:id", async(req, res) => {
+    let result = await User.findOne({
+        where: {
+            id : req.params.id
+        }
+    });
+    res.send(result);
+});
+
+router.post("/", async(req, res) => {
+   let result = false;
+   try{
+       await User.create({id: req.body.id, name: req.body.name, address:req.body.address, password:req.body.password});
+       result = true;
+   }catch(err){
+       console.error(err);
+   }
+   res.send(result);
+});
+
+router.put("/:id", async(req, res) => {
+    let result = false;
+    try{
+        await User.update({
+            name: req.body.id, address: req.body.address },
+            {
+            where: {
+                id : req.params.id
+            }
+        });
+        result = true;
+    }catch(err){
+        console.error(err);
+    }
+    res.send(result);
+});
+
+router.delete("/:id", async(req, res) => {
+    let result = false;
+    try{
+        await User.destroy({
+            where :{
+                id : req.params.id
+            }
+        });
+        result = true;
+    }catch(err){
+        console.error(err);
     } 
-    res.send({msg, result: user});
-});
-
-router.post("/", (req, res) => {
-    const check_user = _.find(users, ["id", req.body.id]);
-    let msg = req.body.id + " 아이디를 가진 유저가 이미 존재합니다.";
-    let success = false;
-    if(!check_user) {
-        users.push(req.body);
-        msg = req.body.id + " 유저가 추가되었습니다.";
-        success = true;
-    }
-    res.send({msg, success});
-});
-
-router.put("/:id", (req, res) => {
-    // const check_user = _.find(users, ["id", parseInt(req.params.id)]);
-    let user = _.find(users, ["id", parseInt(req.params.id)]);
-    let msg = "id가 " + req.params.id + "인 유저가 존재하지 않습니다.";
-    let success = false;
-    if(user) {
-        user.name = req.body.name;
-        msg = "id가 " + req.params.id + "인 유저의 이름을 " + user.name + " 으로 이름이 변경되었습니다.";
-        success = true;
-    }
-    res.send({msg, success});
-});
-
-router.delete("/:id", (req, res) => {
-    let check_user = _.find(users, ["id", parseInt(req.params.id)]);
-    let msg = "id가 " + req.params.id + "인 유저가 존재하지 않습니다.";
-    let success = false;
-    if(check_user) {
-        users = _.reject(users, ["id", parseInt(req.params.id)]);
-        msg = "id가 " + req.params.id + "인 유저의 정보를 삭제했습니다. ";
-        success = true;
-    }
-    res.send({msg, success});
+    res.send(result);
 });
 
 module.exports = router;
