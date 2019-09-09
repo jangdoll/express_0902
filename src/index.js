@@ -61,10 +61,13 @@ app.put("/users/:id", (req, res) => {
 });
 
 app.delete("/users/:id", (req, res) => {
-    if(user && user.id == req.params.id) {
-        user = null;
-        res.send("user id " + req.params.id + " 삭제");
-    } else {
-        res.send("user id " + req.params.id + " 가 존재하지 않습니다.");
+    let check_user = _.find(users, ["id", parseInt(req.params.id)]);
+    let msg = "id가 " + req.params.id + "인 유저가 존재하지 않습니다.";
+    let success = false;
+    if(check_user) {
+        users = _.reject(users, ["id", parseInt(req.params.id)]);
+        msg = "id가 " + req.params.id + "인 유저의 정보를 삭제했습니다. ";
+        success = true;
     }
+    res.send({msg, success});
 });
