@@ -48,12 +48,13 @@ app.post("/users", (req, res) => {
 });
 
 app.put("/users/:id", (req, res) => {
-    const check_user = _.find(users, ["id", parseInt(req.params.id)]);
+    // const check_user = _.find(users, ["id", parseInt(req.params.id)]);
+    let user = _.find(users, ["id", parseInt(req.params.id)]);
     let msg = "id가 " + req.params.id + "인 유저가 존재하지 않습니다.";
     let success = false;
-    if(check_user) {
-        users.name = req.body.name;
-        msg = "id가 " + req.params.id + "인 유저의 이름을 " + users.name + " 으로 이름이 변경되었습니다.";
+    if(user) {
+        user.name = req.body.name;
+        msg = "id가 " + req.params.id + "인 유저의 이름을 " + user.name + " 으로 이름이 변경되었습니다.";
         success = true;
     }
     res.send({msg, success});
