@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
-const boards = require("./boards/board");
 
 let users = [{
     id: 1,
