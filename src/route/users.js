@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
 
+let users = [];
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize("node_example", "root", "1234", {host:"localhost", dialect: "mysql"});
 
@@ -44,9 +45,6 @@ User.sync({ force: true }).then(() => {
         password: "124"
     });
 });
-
-// let users = [];
-
 
 router.get("/address/:address", async(req, res) => {
     let result = await User.findAll({
