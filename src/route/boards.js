@@ -1,36 +1,39 @@
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
+const models = require("../models");
 
-let board = [];
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize("node_example", "root", "1234", {host:"localhost", dialect: "mysql"});
+const Board = models.Board;
 
-const check_sequelize_auth = async () => {
-    try{
-        await sequelize.authenticate();
-        console.log("연결 성공");
-    }catch(err){
-        console.log("연결 실패: ", err);
-    }
-};
+// let board = [];
+// const Sequelize = require("sequelize");
+// const sequelize = new Sequelize("node_example", "root", "1234", {host:"localhost", dialect: "mysql"});
 
-check_sequelize_auth();
+// const check_sequelize_auth = async () => {
+//     try{
+//         await sequelize.authenticate();
+//         console.log("연결 성공");
+//     }catch(err){
+//         console.log("연결 실패: ", err);
+//     }
+// };
 
-const Board = sequelize.define("Board", {
-    title : {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    content : {
-        type: Sequelize.STRING,
-        allowNullG: false
-    },
-    viewcount : {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    }
-});
+// check_sequelize_auth();
+
+// const Board = sequelize.define("Board", {
+//     title : {
+//         type: Sequelize.STRING,
+//         allowNull: false
+//     },
+//     content : {
+//         type: Sequelize.STRING,
+//         allowNullG: false
+//     },
+//     viewcount : {
+//         type: Sequelize.INTEGER,
+//         allowNull: false
+//     }
+// });
 
 Board.sync({ force: true }).then(() => {
     return Board.create({
@@ -42,16 +45,12 @@ Board.sync({ force: true }).then(() => {
     return Board.create({
         title: "몰라유",
         content: "왜요",
-        viewcount: "206"
+        viewcount: "206222"
     });
 })
 
-router.get("/title/:title", async(req, res) => {
-   let result = await Board.findAll({
-       where:{
-           title: req.params.title
-       }
-   });
+router.get("/", async(req, res) => {
+    let result = await Board.findAll({});
     res.send(result);    
 });
 

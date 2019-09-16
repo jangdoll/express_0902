@@ -1,36 +1,38 @@
 const express = require("express");
 const router = express.Router();
+const models = require("../models");
+
+const User = models.user;
+
 const _ = require("lodash");
 
-let users = [];
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize("node_example", "root", "1234", {host:"localhost", dialect: "mysql"});
+// let users = [];
 
-const check_sequelize_auth = async () => {
-    try{
-        await sequelize.authenticate();
-        console.log("연결 성공");
-    }catch(err){
-        console.log("연결 실패: ", err);
-    }
-};
+// const check_sequelize_auth = async () => {
+//     try{
+//         await sequelize.authenticate();
+//         console.log("연결 성공");
+//     }catch(err){
+//         console.log("연결 실패: ", err);
+//     }
+// };
 
-check_sequelize_auth();
+// check_sequelize_auth();
 
-const User = sequelize.define("user", {
-    name : {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    address : {
-        type: Sequelize.STRING,
-        allowNullG: false
-    },
-    password : {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    }
-});
+// const User = sequelize.define("user", {
+//     name : {
+//         type: Sequelize.STRING,
+//         allowNull: false
+//     },
+//     address : {
+//         type: Sequelize.STRING,
+//         allowNullG: false
+//     },
+//     password : {
+//         type: Sequelize.INTEGER,
+//         allowNull: false
+//     }
+// });
 
 User.sync({ force: true }).then(() => {
     return User.create({
@@ -42,16 +44,12 @@ User.sync({ force: true }).then(() => {
     return User.create({
         name: "김철수",
         address: "anyang",
-        password: "124"
+        password: "1224"
     });
 });
 
-router.get("/address/:address", async(req, res) => {
-    let result = await User.findAll({
-        where:{
-            address: req.params.address
-        }
-    });
+router.get("/", async(req, res) => {
+    let result = await User.findAll({});
     res.send(result);
 });
 
