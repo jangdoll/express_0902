@@ -22,6 +22,12 @@ fs.readdirSync(__dirname).filter(file => {
     console.log(db);
 });
 
+Object.keys(db).forEach(modelName => {
+    if(db[modelName].associate) {
+        db[modelName].associate(db);
+    }
+});
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

@@ -34,19 +34,19 @@ const _ = require("lodash");
 //     }
 // });
 
-User.sync({ force: true }).then(() => {
-    return User.create({
-        name: "홍길동",
-        address: "seoul",
-        password: "112"
-    });
-}).then(()=> {
-    return User.create({
-        name: "김철수",
-        address: "anyang",
-        password: "1224"
-    });
-});
+// User.sync({ force: true }).then(() => {
+//     return User.create({
+//         name: "홍길동",
+//         address: "seoul",
+//         password: "112"
+//     });
+// }).then(()=> {
+//     return User.create({
+//         name: "김철수",
+//         address: "anyang",
+//         password: "1224"
+//     });
+// });
 
 router.get("/", async(req, res) => {
     let result = await User.findAll({});
@@ -66,6 +66,7 @@ router.post("/", async(req, res) => {
    let result = false;
    try{
        await User.create({id: req.body.id, name: req.body.name, address:req.body.address, password:req.body.password});
+    //    await User.setBoard({title: "Test!!"});
        result = true;
    }catch(err){
        console.error(err);

@@ -15,7 +15,10 @@ app.get("/", (req,res) => {
     res.send("hello world");
 });
 
-models.sequelize.sync().then(() => {
-    app.listen(3000);
+models.sequelize.query("SET FOREIGN_KEY_CHECKS = 0", {raw: true})
+.then(() => {
+    models.sequelize.sync({force:true}).then(() => {
+        app.listen(3000);
+    });
 });
 

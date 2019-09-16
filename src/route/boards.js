@@ -3,7 +3,7 @@ const router = express.Router();
 const _ = require("lodash");
 const models = require("../models");
 
-const Board = models.Board;
+const Board = models.board;
 
 // let board = [];
 // const Sequelize = require("sequelize");
@@ -35,19 +35,19 @@ const Board = models.Board;
 //     }
 // });
 
-Board.sync({ force: true }).then(() => {
-    return Board.create({
-        title: "asc",
-        content: "뭘까",
-        viewcount: "808"
-    });
-}).then(()=> {
-    return Board.create({
-        title: "몰라유",
-        content: "왜요",
-        viewcount: "206222"
-    });
-})
+// Board.sync({ force: true }).then(() => {
+//     return Board.create({
+//         title: "asc",
+//         content: "뭘까",
+//         viewcount: "808"
+//     });
+// }).then(()=> {
+//     return Board.create({
+//         title: "몰라유",
+//         content: "왜요",
+//         viewcount: "206222"
+//     });
+// })
 
 router.get("/", async(req, res) => {
     let result = await Board.findAll({});

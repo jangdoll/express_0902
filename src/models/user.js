@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
                 }
     });
+    
+    User.associate = function(models) {
+        models.user.hasOne(models.board);
+    };
+
     return User;
 };
 
