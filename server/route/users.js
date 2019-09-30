@@ -3,6 +3,7 @@ const router = express.Router();
 const models = require("../models");
 
 const User = models.user;
+const Board = models.board;
 
 const _ = require("lodash");
 
@@ -66,7 +67,10 @@ const _ = require("lodash");
 // });
 
 router.get("/", async(req, res) => {
-    let result = await User.findAll({});
+    let result = await User.findAll({
+        Attributes: ["name"],
+        include:[Board]
+    });
     res.send(result);
 });
 
@@ -82,7 +86,8 @@ router.get("/:id", async(req, res) => {
 router.post("/", async(req, res) => {
    let result = false;
    try{
-       await User.create({id: req.body.id, name: req.body.name, address:req.body.address, password:req.body.password});
+       let result_user = await User.create ({name: req.body.name, address: req.body.address, password: req.body.password})
+       await result_user.createBoard({title: "Test", content: "Test2", viewcount: 333});
        result = true;
    }catch(err){
        console.error(err);

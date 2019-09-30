@@ -66,7 +66,7 @@ router.get("/:id", async(req, res) => {
 router.post("/", async(req, res) => {
     let result = false;
     try{
-        await Board.create({id: req.body.id, title: req.body.title, content:req.body.content, viewcount:req.body.viewcount});
+        await Board.create({title: req.body.title, content:req.body.content, viewcount:req.body.viewcount});
         result = true;
     }catch(err){
         console.error(err);

@@ -5,8 +5,11 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "node src/index.js",
-    "debug": "nodemon --watch ./src --inspect=0.0.0.0:9229 --nolazy ./src/index.js"
+    "start": "node server/index.js",
+    "debug": "nodemon --watch ./server --inspect=0.0.0.0:9229 --nolazy ./server/index.js",
+    "client": "npm run start --prefix client",
+    "server": "nodemon ./server/index.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
@@ -18,6 +21,7 @@
     "lodash": "^4.17.15",
     "mysql2": "^1.7.0",
     "nodemon": "^1.19.1",
-    "sequelize": "^5.18.4"
+    "sequelize": "^5.18.4",
+    "yarn": "^1.19.0"
   }
 }
