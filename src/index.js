@@ -9,8 +9,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/users", user_router);
 app.use("/boards", board_router);
 
-// app.listen(3000);
-
 app.get("/", (req,res) => {
     res.send("hello world");
 });

@@ -48,6 +48,23 @@ const _ = require("lodash");
 //     });
 // });
 
+// router.get("/init", async(req, res) => {
+//         const users = [{
+//                 id: 1,
+//                 name: "",
+//                 address: ""
+//             },{
+//                 id: 2,             
+//                 name: "",
+//                 address: ""
+//             }];
+//         await User.sync({force: true});
+//         for (const user of users){
+//                 await User.create({ "name": user.name, "address": user.address });
+//             }        
+//             res.send(true);
+// });
+
 router.get("/", async(req, res) => {
     let result = await User.findAll({});
     res.send(result);
@@ -66,7 +83,6 @@ router.post("/", async(req, res) => {
    let result = false;
    try{
        await User.create({id: req.body.id, name: req.body.name, address:req.body.address, password:req.body.password});
-    //    await User.setBoard({title: "Test!!"});
        result = true;
    }catch(err){
        console.error(err);
@@ -77,14 +93,13 @@ router.post("/", async(req, res) => {
 router.put("/:id", async(req, res) => {
     let result = false;
     try{
-        await User.update({
-            name: req.body.id, address: req.body.address },
-            {
+         result = await User.update({name: req.body.name, address: req.body.address, password: req.body.password }, {
             where: {
                 id : req.params.id
             }
+        }).then(result => {
+            return Boolean(result[0]);    
         });
-        result = true;
     }catch(err){
         console.error(err);
     }
@@ -94,12 +109,13 @@ router.put("/:id", async(req, res) => {
 router.delete("/:id", async(req, res) => {
     let result = false;
     try{
-        await User.destroy({
+        result = await User.destroy({
             where :{
                 id : req.params.id
             }
+        }).then(result => {
+            return Boolean(result);
         });
-        result = true;
     }catch(err){
         console.error(err);
     } 

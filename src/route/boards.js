@@ -77,14 +77,13 @@ router.post("/", async(req, res) => {
 router.put("/:id", async(req, res) => {
     let result = false;
     try{
-        await Board.update({
-            title: req.body.title, content: req.body.content},
-            {
+        result = await Board.update({title: req.body.title, content: req.body.content, viewcount: req.body.viewcount}, {
             where: {
                 id : req.params.id
             }
+        }).then(result => {
+            return Boolean(result[0]);
         });
-        result = true;
     }catch(err){
         console.error(err);
     }
@@ -94,12 +93,13 @@ router.put("/:id", async(req, res) => {
 router.delete("/:id", async(req, res) => {
     let result = false;
     try{
-        await Board.destroy({
+        result = await Board.destroy({
             where:{
                 id : req.params.id
             }
+        }).then(result => {
+            return Boolean(result);
         });
-        result = true;
     }catch(err){
         console.error(err);
     }
