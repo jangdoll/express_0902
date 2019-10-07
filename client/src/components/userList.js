@@ -7,7 +7,8 @@ class UserList extends React.Component{
         console.log("constructor: ", this);
         this.state = {
             isLoaded: false,
-            userData: []
+            userData: [],
+            progressing:false
         };
     }
 
@@ -32,20 +33,44 @@ class UserList extends React.Component{
             clearInterval(this.interval);
         }
     }
-    
+    async clickDeleteBtn(id, name){
+        this.setState({
+            progressing: true
+        });
+        alert(`id: ${id}, 이름: ${name}을 삭제합니다.`);
+        await axios.delete(`http://localhost:5000/users/${id}`);
+        await this.getUserAll();
+        this.setState({
+            progressing: false
+        });
+    }
+
     render(){
-        const { isLoaded, userData } = this.state;
+        const { isLoaded, userData, progressing } = this.state;
 
         return isLoaded ?
         <ul>
+            {
+            progressing 
+            &&
+            <div className="loadmask">
+                <img src="/img/loading.gif"></img>
+            </div>
+            }
+            
             {userData.map((data, i) =>{
                 console.log(data);
-                return <li key={i}>이름: {data.name}, {data.content}{data.board && ` 그룹명: ${data.board.content}`}</li>
+                return <li key={i}>id: {data.id}{data.content}{` 이름: ${data.name}`}
+                <span onClick ={this.clickDeleteBtn.bind(this, data.id, data.name)}>
+                X
+                </span>
+                </li>
             })}
         </ul>
         :
         <div>로딩중</div>
     }
 }
+
 
 export default UserList;

@@ -68,7 +68,6 @@ const _ = require("lodash");
 
 router.get("/", async(req, res) => {
     let result = await User.findAll({
-        Attributes: ["name"],
         include:[Board]
     });
     res.send(result);
