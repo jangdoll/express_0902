@@ -5,11 +5,26 @@ class UserList extends React.Component{
     constructor(props){
         super(props);
         console.log("constructor: ", this);
+        this.interval = null;
         this.state = {
             isLoaded: false,
+            editable: false,
             userData: [],
             progressing:false
         };
+    }
+
+    changeEditable(flag){
+        const {editable} = this.state;
+        if(editable){
+            this.setState({
+                editable : false
+            })
+        }else {
+            this.setState({
+                editable: true
+            })
+        }
     }
 
     async getUserAll(){
@@ -33,6 +48,7 @@ class UserList extends React.Component{
             clearInterval(this.interval);
         }
     }
+
     async clickDeleteBtn(id, name){
         this.setState({
             progressing: true
@@ -45,10 +61,24 @@ class UserList extends React.Component{
         });
     }
 
+    async clickAddBtn(){
+        console.log();
+        const {name, address} = this.refs;
+        await axios.post('http://localhost:5000/users', {
+                name: name.value,
+                address: address.value
+            });
+        await this.getUserAll();
+        this.setState({
+            editable: false
+        })
+    }
+
     render(){
-        const { isLoaded, userData, progressing } = this.state;
+        const { isLoaded, userData, progressing, editable } = this.state;
 
         return isLoaded ?
+        <div>
         <ul>
             {
             progressing 
@@ -67,6 +97,17 @@ class UserList extends React.Component{
                 </li>
             })}
         </ul>
+        <div onClick={this.changeEditable.bind(this)}>
+            {editable ? "숨기기" : "+"}
+        </div>
+        {
+            editable && <div>
+                <input type="text" ref="name" placeholder="이름"></input>
+                <input type="text" ref="address" placeholder="주소"></input>
+                <span onClick={this.clickAddBtn.bind(this)} style={{fontsize: "0.6em"}}>추가하기</span>
+            </div>
+        }
+        </div>
         :
         <div>로딩중</div>
     }
